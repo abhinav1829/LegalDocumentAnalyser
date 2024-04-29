@@ -3,20 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Legal Text Summarizer</title>
+    <title>Legal Document Analyser</title>
     <style>
       body {
         font-family: Arial, sans-serif;
-        margin: 40px;
       }
-      textarea,
-      button {
+      #wrapper {
+        height: 90%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      #container {
+        height: 80%;
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      textarea {
         width: 100%;
         padding: 10px;
         box-sizing: border-box;
         margin-top: 10px;
       }
       button {
+        width: 50%;
+        padding: 10px;
+        box-sizing: border-box;
+        margin-top: 10px;
         background-color: #4caf50;
         color: white;
         border: none;
@@ -27,6 +49,7 @@
         background-color: #45a049;
       }
       .summary {
+        align-self: stretch;
         margin-top: 20px;
         background-color: #f2f2f2;
         padding: 20px;
@@ -35,25 +58,28 @@
     </style>
   </head>
   <body>
-    <h1>Legal Text Summarizer</h1>
-    <form method="post">
-      <textarea
-        name="text"
-        rows="10"
-        cols="50"
-        placeholder="Paste your legal text here..."
-      ></textarea>
-      <br />
-      <button type="submit">Summarize</button>
-    </form>
-    {% if summary %}
-    <div class="summary">
-      <h2>Summary:</h2>
-      {{ summary|safe }}
+    <div id="wrapper">
+      <div id="container">
+        <h1>Legal Document Analyser</h1>
+        <form method="post">
+          <textarea
+            name="text"
+            rows="10"
+            cols="50"
+            placeholder="Paste your legal text here..."
+          ></textarea>
+          <br />
+          <button type="submit">Analyse</button>
+        </form>
+        {% if summary %}
+        <div class="summary">
+          <h2>Summary:</h2>
+          {{ summary|safe }}
+        </div>
+        {% endif %} {% if error %}
+        <p style="color: red">{{ error }}</p>
+        {% endif %}
+      </div>
     </div>
-    {% endif %}
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
   </body>
 </html>

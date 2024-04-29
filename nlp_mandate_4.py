@@ -1,3 +1,4 @@
+import re
 import google.generativeai as genai
 import spacy
 from flask import Flask, request, render_template
@@ -7,7 +8,7 @@ GOOGLE_API_KEY = "AIzaSyBUL1rSE7x3xuIG1-s7oXr21SxbQIue1po"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel("gemini-pro")
 nlp = spacy.load("en_core_web_sm")
-prompt = """Please provide a brief analysis of this legal document. 
+prompt = """Please provide a brief analysis of this legal document if the given document is a legal document, otherwise state that it is not a legal document. 
     Include (if relevant) key details such as the parties involved, the nature of the case,obligations, the issues discussed, and the final judgment.
     Summarize the document in a concise and informative way, highlighting the key legal aspects.
     Also perform NER of the legal provided.
@@ -21,7 +22,9 @@ def index():
         try:
             summary = summarize_text(text)
         except Exception as e:
-            return render_template("index.html", original_text=text, summary=None, error=str(e))
+            return render_template(
+                "index.html", original_text=text, summary=None, error=str(e)
+            )
         return render_template("index.html", original_text=text, summary=summary)
     return render_template("index.html")
 
@@ -66,7 +69,9 @@ def format_summary(text):
             formatted_text += f"<h3>{heading_text}</h3>"
         else:
             # Wrap the paragraph in <p> tags
-            formatted_text += f"<p>{paragraph}</p>"
+            f_para = re.sub(r"\*\*(.*?)\*\*", r"<h4>(\1)</h4>", paragraph)
+            f_para = re.sub(r"\*",r"\n",f_para)
+            formatted_text += f"<p>{f_para}</p>"
 
     return formatted_text
 
